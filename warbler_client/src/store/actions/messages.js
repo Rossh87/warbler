@@ -1,19 +1,18 @@
 import {apiCall} from '../../services/api';
 import {addError} from './error';
-import {LOAD_MESSAGES, REMOVE_MESSAGE} from '../actionTypes';
+import {LOAD_MESSAGES} from '../actionTypes';
 
 export const loadMessages = messages => ({
 	type: LOAD_MESSAGES,
 	messages	
 });
 
-export const deleteMessage = idForRemoval => {
+export const deleteMessage = (userIdForRemoval, msgIdForRemoval) => {
 	return (dispatch, getState) => {
-		const {currentUser, messages} = getState();
-		const userId = currentUser.user.id;
-		apiCall('delete', `/api/users/${userId}/messages/${idForRemoval}`)
+		const {messages} = getState();
+		apiCall('delete', `/api/users/${userIdForRemoval}/messages/${msgIdForRemoval}`)
 			.then(removedMessage => {
-				const updatedMessages = messages.filter(msg => msg.id !== idForRemoval);
+				const updatedMessages = messages.filter(msg => msg._id !== msgIdForRemoval);
 				dispatch(loadMessages(updatedMessages));
 			})
 			.catch(err => {

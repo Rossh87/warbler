@@ -1,9 +1,9 @@
 import React from 'react';
-import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
+import {Route, Switch, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Homepage from '../components/Homepage';
 import AuthForm from '../components/AuthForm';
-import {setCurrentUser, authUser} from '../store/actions/auth';
+import {authUser} from '../store/actions/auth';
 import {removeError} from '../store/actions/error';
 import withAuth from '../hocs/withAuth';
 import MessageForm from './MessageForm';

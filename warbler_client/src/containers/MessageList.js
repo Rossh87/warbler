@@ -10,17 +10,17 @@ class MessageList extends Component {
 	}
 
 	render() {
-		const {messages} = this.props;
+		const {messages, deleteMessage, currentUser} = this.props;
 
 		const messageList = messages.map(msg => (
 				<MessageItem
-					messageId={msg._id} 
 					key={msg._id} 
 					date={msg.createdAt} 
 					text={msg.text}
 					username={msg.user.username}
 					profileImageUrl={msg.user.profileImageUrl}
-					deleteMessage={this.props.deleteMessage}
+					deleteMessage={deleteMessage.bind(this, msg.user._id, msg._id)}
+					isMessageOwner={currentUser === msg.user._id}
 				/>
 			)
 		)
@@ -29,12 +29,17 @@ class MessageList extends Component {
 			<div className="row col-sm-8">
 				<div className="offset-1 col-sm-10">
 					<ul className="list-group" id='messages'>
-						{messageList}
+						{
+							(messages.length > 0) ?
+							messageList
+							: <div>
+								<h1>No Messages!</h1>
+							</div>
+						}
 					</ul>
 				</div>
 			</div>
 		)
-
 	}
 
 
@@ -42,7 +47,8 @@ class MessageList extends Component {
 
 function mapStateToProps(state) {
 	return {
-		messages: state.messages
+		messages: state.messages,
+		currentUser: state.currentUser.user.id
 	}
 };
 

@@ -34,7 +34,9 @@ app.get('/api/messages', requireLogin, async function (req, res, next) {
 			username: true,
 			profileImageUrl: true
 		});
-		return res.status(200).json(allMessages);
+		return allMessages ? 
+			res.status(200).json(allMessages)
+			: res.status(200).json({})
 	} 
 
 	catch(err) {
