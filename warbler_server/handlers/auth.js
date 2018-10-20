@@ -10,7 +10,8 @@ exports.signup = async function(req, res, next) {
 				id,
 				username,
 				profileImageUrl
-			}, process.env.SECRET_KEY
+			}, process.env.SECRET_KEY,
+			{expiresIn: '10m'}
 		);
 		return res.status(200).json({
 			id,
@@ -43,7 +44,9 @@ exports.signin = async function(req, res, next) {
 					id,
 					username,
 					profileImageUrl
-				}, process.env.SECRET_KEY
+				}, 
+				process.env.SECRET_KEY,
+				{expiresIn: '2m'}
 			);
 	
 			return res.status(200).json({
@@ -65,5 +68,46 @@ exports.signin = async function(req, res, next) {
 			status: 400,
 			message: "Invalid Email or Password"
 		})
+	}
+};
+
+exports.allowRefresh = function(req, res, next) {
+	try {
+		const token = req.headers.authorization.split(' ')[1];
+		jwt.verify(token, process.env.SECRET_KEY, function(err, payload) {
+			if(err) {
+				throw (err);
+			}
+			else if (payload) {
+				const {id, username, profileImageUrl} = payload;
+				let newToken = jwt.sign(
+					{
+						id,
+						username, 
+						profileImageUrl
+					},
+					process.env.SECRET_KEY,
+					{expiresIn: '5m'}
+				);
+
+				return res.status(200).json({token: newToken});
+			}
+		});
+	} 
+
+	catch (err) {
+		if (err.name === 'TokenExpiredError'){
+			return next({
+				status: 401,
+				message: "Session Expired--Please Sign In!",
+				signInRequired: true
+			});
+		} else {
+			return next({
+				status: 401,
+				message: "Please Sign In To Continue!",
+				signInRequired: true
+			})
+		}
 	}
 }

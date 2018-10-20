@@ -16,7 +16,7 @@ export const deleteMessage = (userIdForRemoval, msgIdForRemoval) => {
 				dispatch(loadMessages(updatedMessages));
 			})
 			.catch(err => {
-				dispatch(addError(err.message));
+				dispatch(addError(err));
 			})
 	}
 }

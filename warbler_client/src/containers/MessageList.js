@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {fetchMessages, deleteMessage} from '../store/actions/messages';
 import MessageItem from '../components/MessageItem';
+import {Redirect} from 'react-router-dom';
 
 class MessageList extends Component {
 
@@ -10,7 +11,7 @@ class MessageList extends Component {
 	}
 
 	render() {
-		const {messages, deleteMessage, currentUser} = this.props;
+		const {messages, deleteMessage, currentUser, errors} = this.props;
 
 		const messageList = messages.map(msg => (
 				<MessageItem
@@ -26,9 +27,15 @@ class MessageList extends Component {
 		)
 
 		return (
+			
 			<div className="row col-sm-8">
 				<div className="offset-1 col-sm-10">
 					<ul className="list-group" id='messages'>
+						{errors.message && 
+							<div className='alert alert-danger'>
+								{errors.message}
+							</div>
+						}
 						{
 							(messages.length > 0) ?
 							messageList
@@ -48,7 +55,8 @@ class MessageList extends Component {
 function mapStateToProps(state) {
 	return {
 		messages: state.messages,
-		currentUser: state.currentUser.user.id
+		currentUser: state.currentUser.user.id,
+		errors: state.errors
 	}
 };
 

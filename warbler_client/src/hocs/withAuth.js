@@ -23,7 +23,8 @@ export default function withAuth(WrappedComponent) {
 
 	function mapStateToProps(state) {
 		return {
-			isAuthenticated: state.currentUser.isAuthenticated
+			isAuthenticated: state.currentUser.isAuthenticated,
+			signInRequired: state.errors.signInRequired
 		}
 	};
 
