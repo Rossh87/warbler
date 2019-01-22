@@ -10,6 +10,40 @@ class Navbar extends Component {
 		this.props.logout();
 	}
 
+	renderNavAuthorized = () => {
+		return ( 
+			<ul className="nav navbar-nav navbar-right">
+				<li>
+					<Link to={`/users/${this.props.currentUser.user.id}/messages/new`}>
+						New Message
+					</Link>
+				</li>
+				<li>
+					<a onClick={this.logout}>Log Out</a>
+				</li>
+			</ul>
+		)
+	}
+
+	renderNavUnauthorized = () => {
+		return (
+			<ul className="nav navbar-nav navbar-right">
+				<li>
+					<Link to='/signup'>Sign Up</Link>
+				</li>
+				<li>
+					<Link to='/signin'>Sign In</Link>
+				</li>
+			</ul>
+		)
+	}
+
+	renderNavConditionally = () => {
+		return this.props.currentUser.isAuthenticated ?
+			this.renderNavAuthorized()
+			: this.renderNavUnauthorized()
+	}
+
 	render() {
 		return(
 			<nav className='navbar navbar-expand'>
@@ -19,33 +53,7 @@ class Navbar extends Component {
 							<img src={Logo} alt="Warbler Home"/>
 						</Link>
 					</div>
-					
-					{this.props.currentUser.isAuthenticated ?
-
-						( 
-							<ul className="nav navbar-nav navbar-right">
-								<li>
-									<Link to={`/users/${this.props.currentUser.user.id}/messages/new`}>
-										New Message
-									</Link>
-								</li>
-								<li>
-									<a onClick={this.logout}>Log Out</a>
-								</li>
-							</ul>
-						) :
-					
-						(
-							<ul className="nav navbar-nav navbar-right">
-								<li>
-									<Link to='/signup'>Sign Up</Link>
-								</li>
-								<li>
-									<Link to='/signin'>Sign In</Link>
-								</li>
-							</ul>
-						)
-					}
+					{this.renderNavConditionally()}
 				</div>
 			</nav>
 		)

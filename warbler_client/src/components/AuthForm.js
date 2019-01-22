@@ -28,10 +28,60 @@ class AuthForm extends Component {
 			.catch(() => {return})
 	}
 
-	render() {
-		const {email, username, password, profileImageUrl} = this.state;
+	renderSignup = (signUp, username, profileImageUrl) => {
+		if(signUp) {
+			return(
+				<div>
+					<label htmlFor="username">Username:</label>
+					<input 
+						type="text" 
+						id='username' 
+						name='username' 
+						className="form-control"
+						onChange={this.handleChange}
+						value={username}
+					/>
 
-		const {heading, buttonText, signUp, errors, removeError, history} = this.props;
+					<label htmlFor="profileImageUrl">Profile Image:</label>
+					<input 
+						type="text" 
+						id='profileImageUrl' 
+						name='profileImageUrl' 
+						className="form-control"
+						onChange={this.handleChange}
+						value={profileImageUrl}
+					/>
+				</div>
+			)
+		}
+	}
+
+	renderErrorMessage = ({message}) => {
+		if(message) {
+			return(
+				<div className='alert alert-danger'>
+					{message}
+				</div>
+			)
+		}
+	}
+
+	render() {
+		const {
+			email, 
+			username, 
+			password, 
+			profileImageUrl
+		} = this.state;
+
+		const {
+			heading, 
+			buttonText, 
+			signUp, 
+			errors, 
+			removeError, 
+			history
+		} = this.props;
 
 		history.listen(() => {
 			removeError();
@@ -43,11 +93,7 @@ class AuthForm extends Component {
 					<form onSubmit={this.handleSubmit}>
 						<h2>{heading}</h2>
 
-						{errors.message && 
-							<div className='alert alert-danger'>
-								{errors.message}
-							</div>
-						}
+						{this.renderErrorMessage(errors)}
 
 						<label htmlFor="email">Email:</label>
 						<input 
@@ -69,29 +115,7 @@ class AuthForm extends Component {
 							value={password}
 						/>
 
-						{signUp &&
-							<div>
-								<label htmlFor="username">Username:</label>
-								<input 
-									type="text" 
-									id='username' 
-									name='username' 
-									className="form-control"
-									onChange={this.handleChange}
-									value={username}
-								/>
-	
-								<label htmlFor="profileImageUrl">profileImageUrl:</label>
-								<input 
-									type="text" 
-									id='profileImageUrl' 
-									name='profileImageUrl' 
-									className="form-control"
-									onChange={this.handleChange}
-									value={profileImageUrl}
-								/>
-							</div>
-						}
+						{this.renderSignup(signUp, username, profileImageUrl)}
 
 						<button type='submit' className='btn btn-primary btn-block btn-large'>{buttonText}</button>
 					</form>

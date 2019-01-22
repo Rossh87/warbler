@@ -14,7 +14,8 @@ class Main extends Component {
 		const timedCheck = () => {
 			const {refreshAuthorizationToken, currentUser} = this.props;
 			if(currentUser.isActive && currentUser.isAuthenticated) {
-				// calculate time remaining until auth token expires.  If < 1 min, declare token stale and attempt to refresh
+				// calculate time remaining until auth token expires.
+				// If < 1 min, declare token stale and attempt to refresh
 				const exp = currentUser.authExpiration;
 				const current = Math.floor(Date.now() / 1000);
 				const staleToken = (exp - current) < 60;
@@ -35,17 +36,40 @@ class Main extends Component {
 		return(
 			<div className="container">
 				<Switch>
-					<Route exact path='/' render={props => <Homepage currentUser={currentUser} {...props}/>} />
+					<Route exact path='/' render={props => 
+						<Homepage 
+							currentUser={currentUser} 
+							{...props}
+						/>} 
+					/>
 
 					<Route path='/signin' render={props => 
-						<AuthForm buttonText='Log In' heading='Welcome Back' errors={errors} removeError={removeError} authUser={authUser} {...props}/>} 
+						<AuthForm 
+							buttonText='Log In' 
+							heading='Welcome Back' 
+							errors={errors} 
+							removeError={removeError} 
+							authUser={authUser} 
+							{...props}
+						/>} 
 					/>
 
 					<Route path='/signup' render={props => 
-						<AuthForm buttonText='Sign Up' heading='Join Today!' errors={errors} removeError={removeError} signUp authUser={authUser} {...props}/>} 
+						<AuthForm 
+							buttonText='Sign Up' 
+							heading='Join Today!' 
+							errors={errors} 
+							removeError={removeError} 
+							signUp 
+							authUser={authUser} 
+							{...props}
+						/>} 
 					/>
 
-					<Route path='/users/:id/messages/new' component={withAuth(MessageForm)} />
+					<Route 
+						path='/users/:id/messages/new' 
+						component={withAuth(MessageForm)}
+					/>
 						
 				</Switch>
 			</div>
