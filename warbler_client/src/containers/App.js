@@ -1,78 +1,104 @@
+// Import packages
 import React, {Component} from 'react';
-import { Provider, connect } from 'react-redux';
-import {configureStore} from '../store';
 import {BrowserRouter as Router} from 'react-router-dom';
-import Navbar from './Navbar';
-import Main from './Main';
-import {setAuthorizationToken, setCurrentUser, setActiveUser, logout} from '../store/actions/auth';
+import { connect } from 'react-redux';
 import jwtDecode from 'jwt-decode';
 import IdleTimer from 'react-idle-timer';
+import PropTypes from 'prop-types';
 
-const store = configureStore();
-const localToken = localStorage.jwtToken;
+// Import local components
+import Navbar from '../components/Navbar';
+import Main from './Main';
 
-if (localToken) {
-	setAuthorizationToken(localToken);
-	try {
-		store.dispatch(setCurrentUser(jwtDecode(localToken)));
-	}
+// Import state management 
+import {setCurrentUser, setActiveUser} from '../store/actions/auth/authActionCreators';
+import logout from '../store/actions/auth/logout';
+import manageAxiosHeaders from '../services/manageAxiosHeaders';
 
-	catch (err) {
-		store.dispatch(setCurrentUser({}));
-	}
-};
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.onActive = this._onActive.bind(this);
-    this.onIdle = this._onIdle.bind(this);
     this.idleTimer = null;
   }
 
-  _onActive() {
-    store.dispatch(setActiveUser(true));
+  checkForToken () {
+    const localToken = localStorage.getItem('jwtToken');
+    const {setCurrentUser} = this.props;
+
+    if (localToken) {
+      manageAxiosHeaders({token: localToken});
+
+      try {
+        setCurrentUser(jwtDecode(localToken));
+      }
+
+      catch (err) {
+        setCurrentUser({});
+      }
+    };
   }
 
-  _onIdle() {
-    store.dispatch(setActiveUser(false));
+  componentDidMount() {
+    this.checkForToken();
+  }
+
+  onActive = () => {
+    console.log('active');
+    // const {setActiveUser} = this.props;
+    // setActiveUser(true);
+  }
+
+  onIdle = () => {
+    console.log('idle');
+    // const {setActiveUser} = this.props;
+    // setActiveUser(false);
   }
 
   render() {
+    const {currentUser, logout} = this.props;
+
     return (
-      <Provider store = {store}>
-        <Router>
-          <IdleTimer
-            ref={ref => { this.idleTimer = ref }}
-            element={document}
-            onActive={this.onActive}
-            onIdle={this.onIdle}
-            timeout={1000 * 30}
-          >
-            <div className='onboarding'>
-              <Navbar />
-              <Main />
-            </div>
-          </IdleTimer>
-        </Router>
-      </Provider>
+      <Router>
+        <IdleTimer
+          ref={ref => { this.idleTimer = ref }}
+          element={document}
+          onActive={this.onActive}
+          onIdle={this.onIdle}
+          timeout={1000 * 10}
+        >
+          <div className='onboarding'>
+            <Navbar currentUser={currentUser} logout={logout}/>
+            <Main />
+          </div>
+        </IdleTimer>
+      </Router>
     )
   }
 
 };
 
-function mapStateToProps(state) {
+function mapStateToProps({currentUser}) {
   return {
-    currentUser: state.currentUser 
+    currentUser
   }
 }
 
-function connectWithStore(store, WrappedComponent, ...args) {
-  const ConnectedComponent = connect(...args)(WrappedComponent);
-  return function(props){
-    return <ConnectedComponent {...props} store={store} />
-  } 
+export {App};
+
+export default connect(mapStateToProps, {logout, setCurrentUser, setActiveUser})(App);
+
+App.propTypes = {
+    currentUser: PropTypes.shape(
+      {
+        isAuthenticated: PropTypes.bool,
+        isActive: PropTypes.bool,
+        user: PropTypes.object,
+        authExpiration: PropTypes.number
+      }
+    ).isRequired,
+
+    logout: PropTypes.func.isRequired,
+    setCurrentUser: PropTypes.func.isRequired,
+    setActiveUser: PropTypes.func.isRequired
 }
-
-
-export default connectWithStore(store, App, mapStateToProps, {logout}); 

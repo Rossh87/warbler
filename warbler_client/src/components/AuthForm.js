@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+
+import TextInput from '../legos/TextInput';
 
 class AuthForm extends Component {
 	constructor(props) {
@@ -22,33 +25,26 @@ class AuthForm extends Component {
 		e.preventDefault();
 		const authType = signUp ? 'signUp' : 'signIn';
 		authUser(authType, this.state)
-			.then(() => {
-				this.props.history.push('/');
-			})
-			.catch(() => {return})
+			// .then(() => {
+			// 	this.props.history.push('/');
+			// })
+			// .catch(() => {return})
+		this.props.history.push('/')
 	}
 
 	renderSignup = (signUp, username, profileImageUrl) => {
 		if(signUp) {
 			return(
 				<div>
-					<label htmlFor="username">Username:</label>
-					<input 
-						type="text" 
-						id='username' 
-						name='username' 
-						className="form-control"
-						onChange={this.handleChange}
+					<TextInput 
+						inputName='username'
+						handleChange={this.handleChange}
 						value={username}
 					/>
 
-					<label htmlFor="profileImageUrl">Profile Image:</label>
-					<input 
-						type="text" 
-						id='profileImageUrl' 
-						name='profileImageUrl' 
-						className="form-control"
-						onChange={this.handleChange}
+					<TextInput 
+						inputName='profileImageUrl'
+						handleChange={this.handleChange}
 						value={profileImageUrl}
 					/>
 				</div>
@@ -78,7 +74,7 @@ class AuthForm extends Component {
 			heading, 
 			buttonText, 
 			signUp, 
-			errors, 
+			error, 
 			removeError, 
 			history
 		} = this.props;
@@ -93,25 +89,17 @@ class AuthForm extends Component {
 					<form onSubmit={this.handleSubmit}>
 						<h2>{heading}</h2>
 
-						{this.renderErrorMessage(errors)}
+						{this.renderErrorMessage(error)}
 
-						<label htmlFor="email">Email:</label>
-						<input 
-							type="text" 
-							id='email' 
-							name='email' 
-							className="form-control"
-							onChange={this.handleChange}
+						<TextInput 
+							inputName='email'
+							handleChange={this.handleChange}
 							value={email}
 						/>
 
-						<label htmlFor="password">Password:</label>
-						<input 
-							type="password" 
-							id='password' 
-							name='password' 
-							className="form-control"
-							onChange={this.handleChange}
+						<TextInput 
+							inputName='password'
+							handleChange={this.handleChange}
 							value={password}
 						/>
 
@@ -126,3 +114,12 @@ class AuthForm extends Component {
 }
 
 export default AuthForm;
+
+AuthForm.propTypes = {
+	heading: PropTypes.string.isRequired, 
+	buttonText: PropTypes.string.isRequired, 
+	signUp: PropTypes.bool.isRequired, 
+	error: PropTypes.object.isRequired, 
+	removeError: PropTypes.func.isRequired, 
+	history: PropTypes.func.isRequired
+}

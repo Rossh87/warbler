@@ -1,5 +1,6 @@
 import React from 'react';
 import DefaultProfileImage from '../images/default-profile-image.jpg';
+import PropTypes from 'prop-types';
 
 const UserAside = ({profileImageUrl, username}) => {
 	return (
@@ -20,3 +21,8 @@ const UserAside = ({profileImageUrl, username}) => {
 }
 
 export default UserAside;
+
+UserAside.propTypes = {
+	profileImageUrl: PropTypes.string,
+	username: PropTypes.string.isRequired
+};

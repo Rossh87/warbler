@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {fetchMessages, deleteMessage} from '../store/actions/messages';
+import fetchMessages from '../store/actions/messages/fetchMessages';
+import deleteMessage from '../store/actions/messages/deleteMessage';
 import MessageItem from '../components/MessageItem';
-import {Redirect} from 'react-router-dom';
 
 class MessageList extends Component {
 
@@ -11,7 +11,7 @@ class MessageList extends Component {
 	}
 
 	render() {
-		const {messages, deleteMessage, currentUser, errors} = this.props;
+		const {messages, deleteMessage, currentUser, error} = this.props;
 
 		const messageList = messages.map(msg => (
 				<MessageItem
@@ -31,9 +31,9 @@ class MessageList extends Component {
 			<div className="row col-sm-8">
 				<div className="offset-1 col-sm-10">
 					<ul className="list-group" id='messages'>
-						{errors.message && 
+						{error.message && 
 							<div className='alert alert-danger'>
-								{errors.message}
+								{error.message}
 							</div>
 						}
 						{
@@ -48,15 +48,15 @@ class MessageList extends Component {
 			</div>
 		)
 	}
-
-
 }
+
+MessageList.displayName = 'MessageList';
 
 function mapStateToProps(state) {
 	return {
 		messages: state.messages,
-		currentUser: state.currentUser.user.id,
-		errors: state.errors
+		currentUser: state.currentUser.id,
+		error: state.error
 	}
 };
 

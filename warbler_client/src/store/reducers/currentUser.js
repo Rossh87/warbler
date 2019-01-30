@@ -2,9 +2,7 @@ import {SET_CURRENT_USER, SET_ACTIVE_USER, SET_AUTH_EXPIRATION, LOGOUT_CURRENT_U
 
 const DEFAULT_STATE = {
 	isAuthenticated: false,
-	isActive: true,
-	user: {},
-	authExpiration: null
+	isActive: true
 };
 
 export default (state = DEFAULT_STATE, action) => {
@@ -12,8 +10,8 @@ export default (state = DEFAULT_STATE, action) => {
 		case SET_CURRENT_USER:
 			return {
 				...state,
-				isAuthenticated: !!Object.keys(action.user).length,
-				user: action.user
+				isAuthenticated: !!Object.keys(action.currentUser).length,
+				...action.currentUser
 			};
 
 		case SET_ACTIVE_USER:
@@ -25,7 +23,7 @@ export default (state = DEFAULT_STATE, action) => {
 		case SET_AUTH_EXPIRATION:
 			return {
 				...state,
-				authExpiration: action.exp
+				authExp: action.authExp
 			};
 
 		case LOGOUT_CURRENT_USER:

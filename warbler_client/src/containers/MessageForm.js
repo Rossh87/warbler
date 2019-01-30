@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {postNewMessage} from '../store/actions/messages';
+import postNewMessage from '../store/actions/messages/postNewMessage';
 
 class MessageForm extends Component {
 	constructor(props) {
@@ -31,9 +31,9 @@ class MessageForm extends Component {
 
 		return (
 			<form onSubmit={this.handleSubmit}>
-				{this.props.errors.message && (
+				{this.props.error.message && (
 					<div className="alert alert-danger">
-						{this.props.errors}
+						{this.props.error}
 					</div>
 				)}
 
@@ -46,7 +46,7 @@ class MessageForm extends Component {
 
 function mapStateToProps(state) {
 	return {
-		errors: state.errors
+		error: state.error
 	}
 }
 

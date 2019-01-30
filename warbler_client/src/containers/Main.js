@@ -1,37 +1,39 @@
 import React, {Component} from 'react';
 import {Route, Switch, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
+import {compose} from 'redux';
+import PropTypes from 'prop-types';
+
+// Get local components
 import Homepage from '../components/Homepage';
 import AuthForm from '../components/AuthForm';
-import {authUser, refreshAuthorizationToken} from '../store/actions/auth';
-import {removeError} from '../store/actions/error';
-import withAuth from '../hocs/withAuth';
 import MessageForm from './MessageForm';
+import withAuth from '../hocs/withAuth';
+
+// Get actions/dispatchers
+import authUser from '../store/actions/auth/authUser';
+import refreshAuthToken from '../store/actions/auth/refreshAuthToken';
+import {removeError} from '../store/actions/error';
+
+// Get service function for mapStateToProps
+import isStaleSelector from '../services/isStaleSelector';
 
 class Main extends Component {
 	componentDidMount() {
-		// check if user is auth'd and active.  
-		const timedCheck = () => {
-			const {refreshAuthorizationToken, currentUser} = this.props;
-			if(currentUser.isActive && currentUser.isAuthenticated) {
-				// calculate time remaining until auth token expires.
-				// If < 1 min, declare token stale and attempt to refresh
-				const exp = currentUser.authExpiration;
-				const current = Math.floor(Date.now() / 1000);
-				const staleToken = (exp - current) < 60;
-				// call refresh function
-				if(staleToken) {
-					refreshAuthorizationToken();
-				}
-			}
-		}
-
-		setInterval(timedCheck, 30000);
+		setInterval(this.checkTokenExp, 30000);
 	}
-	
+
+	checkTokenExp = () => {
+		const { refreshAuthToken, tokenIsStale } = this.props;
+
+		if(tokenIsStale()) {
+			refreshAuthToken();
+		};
+	}
+
 	render() {
 
-		const {authUser, errors, removeError, currentUser} = this.props;
+		const {authUser, error, removeError, currentUser} = this.props;
 
 		return(
 			<div className="container">
@@ -47,7 +49,7 @@ class Main extends Component {
 						<AuthForm 
 							buttonText='Log In' 
 							heading='Welcome Back' 
-							errors={errors} 
+							error={error} 
 							removeError={removeError} 
 							authUser={authUser} 
 							{...props}
@@ -58,7 +60,7 @@ class Main extends Component {
 						<AuthForm 
 							buttonText='Sign Up' 
 							heading='Join Today!' 
-							errors={errors} 
+							error={error} 
 							removeError={removeError} 
 							signUp 
 							authUser={authUser} 
@@ -77,11 +79,31 @@ class Main extends Component {
 	}
 }
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
 	return {
 		currentUser: state.currentUser,
-		errors: state.errors
+		error: state.error,
+		tokenIsStale: isStaleSelector(state, 30) 
 	};
-}
+};
 
-export default withRouter(connect(mapStateToProps, {authUser, removeError, refreshAuthorizationToken})(Main));
+const actions = {
+	authUser,
+	removeError,
+	refreshAuthToken
+};
+
+export {Main};
+export default compose(
+	connect(mapStateToProps, actions),
+	withRouter
+)(Main);
+
+Main.propTypes = {
+	authUser: PropTypes.func.isRequired,
+	error: PropTypes.object.isRequired,
+	removeError: PropTypes.func.isRequired,
+	currentUser: PropTypes.object.isRequired,
+	refreshAuthToken: PropTypes.func.isRequired,
+	tokenIsStale: PropTypes.func.isRequired
+};
