@@ -1,5 +1,5 @@
 import manageTokenExp from '../manageTokenExp';
-import authResponseMock from '../__mocks__/authResponseMock';
+import {authResponseWithImg} from '../../__mocks__/responseMocks';
 import jwtDecode from 'jwt-decode';
 
 
@@ -11,7 +11,7 @@ describe('The function manageTokenExp', () => {
 		prop2: '123'
 	};
 
-	const {token, ...passthrough} = authResponseMock
+	const {token, ...passthrough} = authResponseWithImg
 
 	const expected = {
 		authExp: jwtDecode(token).exp,
@@ -25,7 +25,7 @@ describe('The function manageTokenExp', () => {
 	});
 
 	it('replaces property "token" with decoded expiration', () => {
-		output = manageTokenExp(authResponseMock);
+		output = manageTokenExp(authResponseWithImg);
 		expect(output).toEqual(expected);
 	});
 });

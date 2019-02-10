@@ -2,7 +2,7 @@ import React from 'react';
 import AuthForm from '../AuthForm';
 import {shallow} from 'enzyme';
 
-const fakeSignup = {
+const fakesignup = {
 	email: 'someMail', 
 	username: 'someName', 
 	password: 'somePW', 
@@ -39,7 +39,7 @@ describe('When component renders', () => {
 	})
 })
 
-describe('When signUp is true', () => {
+describe('When prop signUp is true', () => {
 
 	beforeAll(() => {
 		component = shallow(<AuthForm {...fakeProps} signUp={true} />);
@@ -51,7 +51,7 @@ describe('When signUp is true', () => {
 
 	describe('When form is submitted', () => {
 		beforeAll(() => {
-			component.setState(fakeSignup);
+			component.setState(fakesignup);
 			component.instance().handleSubmit(fakeEvent);
 		});
 
@@ -60,7 +60,7 @@ describe('When signUp is true', () => {
 		});
 
 		it('calls authUser with correct params', () => {
-			expect(fakeProps.authUser).toHaveBeenCalledWith('signUp', fakeSignup);
+			expect(fakeProps.authUser).toHaveBeenCalledWith('signup', fakesignup);
 		});
 
 		it('calls history.push to root route', () => {
@@ -70,7 +70,7 @@ describe('When signUp is true', () => {
 
 });
 
-describe('When signUp is false', () => {
+describe('When prop signUp is false', () => {
 
 	beforeAll(() => {
 		component = shallow(<AuthForm {...fakeProps} signUp={false} />);
@@ -82,7 +82,7 @@ describe('When signUp is false', () => {
 
 	describe('When form is submitted', () => {
 		beforeAll(() => {
-			component.setState(fakeSignup);
+			component.setState(fakesignup);
 			component.instance().handleSubmit(fakeEvent);
 		});
 
@@ -91,7 +91,7 @@ describe('When signUp is false', () => {
 		});
 
 		it('calls authUser with correct params', () => {
-			expect(fakeProps.authUser).toHaveBeenCalledWith('signIn', fakeSignup);
+			expect(fakeProps.authUser).toHaveBeenCalledWith('signin', fakesignup);
 		});
 	});
 

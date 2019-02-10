@@ -1,9 +1,9 @@
 import manageLocalStorage from '../manageLocalStorage';
 import '../../__mocks__/localStorageMock';
-import authResponseMock from '../__mocks__/authResponseMock';
+import {authResponseWithImg} from '../../__mocks__/responseMocks';
 
 beforeEach(() => {
-	manageLocalStorage(authResponseMock);
+	manageLocalStorage(authResponseWithImg);
 });
 
 afterEach(() => {
@@ -13,13 +13,13 @@ afterEach(() => {
 describe('When manageLocalStorage is called with an object as parameter', () => {
 
 	it('creates prop jwtToken on localStorage if object has property "token"', () => {
-		expect(localStorage.getItem('jwtToken')).toEqual(authResponseMock.token);
+		expect(localStorage.getItem('jwtToken')).toEqual(authResponseWithImg.token);
 	});
 
 	it('returns a new object equal to the passed param', () => {
-		const expectedVal = manageLocalStorage(authResponseMock);
-		expect(expectedVal).toEqual(authResponseMock);
-		expect(expectedVal).not.toBe(authResponseMock);
+		const expectedVal = manageLocalStorage(authResponseWithImg);
+		expect(expectedVal).toEqual(authResponseWithImg);
+		expect(expectedVal).not.toBe(authResponseWithImg);
 	});
 
 	it('calls localStorage.clear if passed param does not have property "token"', () => {

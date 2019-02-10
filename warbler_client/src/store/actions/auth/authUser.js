@@ -1,4 +1,4 @@
-import {addError, removeError} from '../error';
+import {addError, removeError} from '../errorActionCreators';
 import {setCurrentUser} from './authActionCreators';
 import manageAuthResponse from '../../../services/manageAuthResponse';
 import apiCall from '../../../services/api';
@@ -9,11 +9,10 @@ const authUser = (type, userData) => {
 			// Transform data with function pipeline,
 			// appropriately configuring client along
 			// the way
-			.then(manageAuthResponse)
+			.then(res => manageAuthResponse(res))
 
 			// Dispatch transformed data
 			.then(user => {
-				console.log(user)
 				dispatch(setCurrentUser(user));
 				dispatch(removeError());
 			})

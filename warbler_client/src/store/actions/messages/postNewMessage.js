@@ -1,5 +1,5 @@
 import apiCall from '../../../services/api';
-import {addError} from '../error';
+import {addError} from '../errorActionCreators';
 
 export const postNewMessage = text => {
 	return (dispatch, getState) => {

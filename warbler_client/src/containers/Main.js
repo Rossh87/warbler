@@ -13,7 +13,7 @@ import withAuth from '../hocs/withAuth';
 // Get actions/dispatchers
 import authUser from '../store/actions/auth/authUser';
 import refreshAuthToken from '../store/actions/auth/refreshAuthToken';
-import {removeError} from '../store/actions/error';
+import {removeError} from '../store/actions/errorActionCreators';
 
 // Get service function for mapStateToProps
 import isStaleSelector from '../services/isStaleSelector';
@@ -51,7 +51,8 @@ class Main extends Component {
 							heading='Welcome Back' 
 							error={error} 
 							removeError={removeError} 
-							authUser={authUser} 
+							authUser={authUser}
+							signUp={false}
 							{...props}
 						/>} 
 					/>
@@ -95,8 +96,8 @@ const actions = {
 
 export {Main};
 export default compose(
-	connect(mapStateToProps, actions),
-	withRouter
+	withRouter,
+	connect(mapStateToProps, actions)
 )(Main);
 
 Main.propTypes = {

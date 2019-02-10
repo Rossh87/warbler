@@ -1,5 +1,5 @@
 import {loadMessages} from './messageActionCreators';
-import {addError} from '../error';
+import {addError} from '../errorActionCreators';
 import apiCall from '../../../services/api';
 
 

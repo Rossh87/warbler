@@ -6,7 +6,7 @@ import {App} from '../App';
 
 // get data and environment mocks
 import '../../__mocks__/localStorageMock';
-import authResponseMock from '../../__mocks__/authResponseMock';
+import {authResponseWithImg} from '../../__mocks__/responseMocks';
 import manageAxiosHeaders from '../../services/manageAxiosHeaders';
 import jwtDecode from 'jwt-decode';
 
@@ -52,7 +52,7 @@ describe('When App mounts', () => {
 
 	describe('and there is a token in localStorage', () => {
 		beforeEach(() => {
-			localStorage.setItem('jwtToken', authResponseMock.token);
+			localStorage.setItem('jwtToken', authResponseWithImg.token);
 		});
 
 		afterEach(() => {
@@ -60,13 +60,13 @@ describe('When App mounts', () => {
 		});
 
 		it('calls manageAxiosHeaders with correct param', () => {
-			const expected = {token: authResponseMock.token};
+			const expected = {token: authResponseWithImg.token};
 			component.instance().componentDidMount()
 			expect(manageAxiosHeaders).toHaveBeenCalledWith(expected);
 		});
 
 		it('calls setCurrentUser with correct param', () => {
-			const expected = jwtDecode(authResponseMock.token);
+			const expected = jwtDecode(authResponseWithImg.token);
 			expect(fakeProps.setCurrentUser).toHaveBeenCalledWith(expected);
 		});
 

@@ -1,5 +1,10 @@
 import axios from 'axios';
+import moxios from 'moxios';
+
+// Get mock data
 import {authResponseWithImg} from '../../__mocks__/responseMocks';
+
+// Get local functions(s)/helpers
 import apiCall from '../api';
 
 const fakeService = (response) => {
@@ -29,21 +34,4 @@ describe('When apiCall is called', () => {
 			done();
 		});
 	});
-
-	it('returns a promise that resolves to response data', async (done) => {
-		const dummy = (data) => {console.log(data)};
-
-		moxios.stubRequest('/api/auth', {
-			status: 200,
-			data: authResponseWithImg
-		});
-
-		moxios.wait(() => {
-			apiCall('get', '/api/auth', {fakeData: 'somedata'}).then(data => {
-				console.log(data)
-				expect(data).toEqual({data:'somedata'});
-				done();
-			});	
-		}) 
-	});
-})
+});

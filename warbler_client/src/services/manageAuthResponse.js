@@ -6,5 +6,5 @@ import {compose} from 'redux';
 
 // no test required for a function composed of tested units
 
-export default compose(manageLocalStorage, manageAxiosHeaders, manageTokenExp);
+export default compose(manageTokenExp, manageAxiosHeaders, manageLocalStorage);
 

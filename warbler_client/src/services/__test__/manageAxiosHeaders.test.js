@@ -1,6 +1,6 @@
 import axios from 'axios';
 import moxios from 'moxios';
-import authResponseMock from '../__mocks__/authResponseMock';
+import {authResponseWithImg} from '../../__mocks__/responseMocks';
 import manageAxiosHeaders from '../manageAxiosHeaders';
 
 jest.mock('axios');
@@ -8,13 +8,13 @@ jest.mock('axios');
 describe('When an object containing a token is passed to manageAxiosHeaders', () => {
 
 	it('returns a copy of passed object', () => {
-		const result = manageAxiosHeaders(authResponseMock);
-		expect(result).toEqual(authResponseMock);
-		expect(result).not.toBe(authResponseMock);
+		const result = manageAxiosHeaders(authResponseWithImg);
+		expect(result).toEqual(authResponseWithImg);
+		expect(result).not.toBe(authResponseWithImg);
 	});
 
 	it('sets a Bearer Authorization header', () => {
-		expect(axios.defaults.headers.common["Authorization"]).toEqual('Bearer ' + authResponseMock.token);
+		expect(axios.defaults.headers.common["Authorization"]).toEqual('Bearer ' + authResponseWithImg.token);
 	});
 });
 

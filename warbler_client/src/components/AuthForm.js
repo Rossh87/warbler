@@ -23,7 +23,7 @@ class AuthForm extends Component {
 	handleSubmit = e => {
 		const {signUp, authUser} = this.props;
 		e.preventDefault();
-		const authType = signUp ? 'signUp' : 'signIn';
+		const authType = signUp ? 'signup' : 'signin';
 		authUser(authType, this.state)
 			// .then(() => {
 			// 	this.props.history.push('/');
@@ -121,5 +121,5 @@ AuthForm.propTypes = {
 	signUp: PropTypes.bool.isRequired, 
 	error: PropTypes.object.isRequired, 
 	removeError: PropTypes.func.isRequired, 
-	history: PropTypes.func.isRequired
-}
+	history: PropTypes.object.isRequired
+};

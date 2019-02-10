@@ -1,4 +1,4 @@
-import {addError} from '../error';
+import {addError} from '../errorActionCreators';
 import {setAuthExpiration} from './authActionCreators';
 import manageAuthResponse from '../../../services/manageAuthResponse';
 import apiCall from '../../../services/api';

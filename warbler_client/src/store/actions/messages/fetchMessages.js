@@ -1,6 +1,6 @@
 import {loadMessages} from './messageActionCreators';
 import apiCall from '../../../services/api';
-import {addError} from '../error';
+import {addError} from '../errorActionCreators';
 
 
 export const fetchMessages = () => {
